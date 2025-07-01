@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "strict": true,
+    "jsx": "preserve",
+    "sourceMap": true,
+    "baseUrl": "."
+  },
+  "include": ["packages/**/*.ts", "packages/**/*.tsx", "scripts/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}

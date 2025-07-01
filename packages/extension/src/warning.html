@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Security Warning - Wayfinder</title>
+    <!-- AR.IO Brand Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Albert+Sans:wght@400;600&family=DM+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&family=Rubik:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/variables.css" />
+    <link rel="stylesheet" href="assets/css/warning.css" />
+    <script type="module" src="warning.js"></script>
+  </head>
+  <body>
+    <div class="warning-container">
+      <!-- Header -->
+      <header class="warning-header">
+        <div class="header-content">
+          <div class="logo-section">
+            <div class="logo-icon">
+              <img src="assets/Vector.png" alt="Wayfinder" width="55" height="55" />
+            </div>
+            <div class="logo-text">
+              <h1>Wayfinder</h1>
+              <p>AR.IO Network</p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Warning Content -->
+      <main class="warning-content">
+        <!-- Warning Icon and Title -->
+        <div class="warning-icon-section">
+          <div class="warning-icon">
+            <svg width="64" height="64" viewBox="0 0 36 36" fill="none">
+              <path d="M15.435 6l-12 21A3 3 0 0 0 6 31.5h24a3 3 0 0 0 2.565-4.5l-12-21a3 3 0 0 0-5.13 0z" stroke="var(--colors-icons-iconHigh)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M18 13.5v6M18 25.5h.015" stroke="var(--colors-icons-iconHigh)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h2 class="warning-title">Verification Warning</h2>
+          <p class="warning-subtitle">This content could not be verified by the AR.IO network</p>
+        </div>
+
+        <!-- URL Display -->
+        <div class="url-section">
+          <div class="url-label">Requested URL</div>
+          <div class="url-display" id="requestedUrl">
+            <span class="url-text">ar://...</span>
+          </div>
+        </div>
+
+        <!-- Warning Message -->
+        <div class="warning-message">
+          <p>
+            The cryptographic verification of this content has failed. This could mean:
+          </p>
+          <ul>
+            <li>The content has been modified or tampered with</li>
+            <li>The gateway is experiencing technical issues</li>
+            <li>The verification service is temporarily unavailable</li>
+          </ul>
+          <p class="risk-warning">
+            <strong>Proceeding may expose you to security risks.</strong> Only continue if you trust the source and understand the risks.
+          </p>
+        </div>
+
+        <!-- Expandable Details -->
+        <details class="technical-details" id="technicalDetails">
+          <summary>
+            <span>Technical Details</span>
+            <svg width="18" height="18" viewBox="0 0 36 36" fill="none">
+              <path d="M9 13.5L18 22.5L27 13.5" stroke="var(--colors-icons-iconMid)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </summary>
+          <div class="details-content">
+            <div class="detail-item">
+              <span class="detail-label">Verification Strategy:</span>
+              <span class="detail-value" id="verificationStrategy">Unknown</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Error:</span>
+              <span class="detail-value error-text" id="verificationError">No error details available</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Gateway:</span>
+              <span class="detail-value" id="gatewayInfo">Unknown</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Transaction ID:</span>
+              <span class="detail-value monospace" id="txId">Unknown</span>
+            </div>
+          </div>
+        </details>
+
+        <!-- Actions -->
+        <div class="actions-section">
+          <div class="bypass-options">
+            <label class="checkbox-container">
+              <input type="checkbox" id="rememberChoice" />
+              <span class="checkbox-label">Don't warn me about this page again</span>
+            </label>
+          </div>
+
+          <div class="action-buttons">
+            <button class="button button-secondary" id="goBackButton">
+              <svg width="18" height="18" viewBox="0 0 36 36" fill="none">
+                <path d="M28.5 18H7.5M15 10.5L7.5 18L15 25.5" stroke="var(--colors-icons-iconHigh)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Go Back Safely
+            </button>
+            <button class="button button-danger" id="proceedButton" disabled>
+              Proceed Anyway
+              <span class="button-timer" id="proceedTimer">(3)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Footer Info -->
+        <div class="footer-info">
+          <p>
+            Learn more about <a href="https://ar.io/verification" target="_blank" rel="noopener noreferrer">AR.IO verification</a> 
+            or <a href="#" id="reportIssue">report a false positive</a>.
+          </p>
+        </div>
+      </main>
+
+      <!-- Footer -->
+      <footer class="warning-footer">
+        <div class="footer-content">
+          <div class="footer-links">
+            <a href="https://github.com/ar-io/wayfinder" target="_blank" title="View source code" class="footer-link">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <path d="M11.25 16.5V13.5C11.3543 12.5605 11.0849 11.6176 10.5 10.875C12.75 10.875 15 9.375 15 6.75C15.06 5.8125 14.7975 4.89 14.25 4.125C14.46 3.2625 14.46 2.3625 14.25 1.5C14.25 1.5 13.5 1.5 12 2.625C10.02 2.25 7.98 2.25 6 2.625C4.5 1.5 3.75 1.5 3.75 1.5C3.525 2.3625 3.525 3.2625 3.75 4.125C3.20391 4.88691 2.93885 5.81459 3 6.75C3 9.375 5.25 10.875 7.5 10.875C7.2075 11.2425 6.99 11.6625 6.8625 12.1125C6.735 12.5625 6.6975 13.035 6.75 13.5V16.5" stroke="var(--colors-icons-iconLow)" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M6.75 13.5C3.3675 15 3 12 1.5 12" stroke="var(--colors-icons-iconLow)" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <a href="https://discord.gg/zAZ8p9ARqC" target="_blank" title="Join our Discord" class="footer-link">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <path d="M7.75 2.43768H9.76971C9.91219 2.43768 10.0424 2.35693 10.1057 2.22928L10.6143 1.2035C10.6916 1.04772 10.8649 0.965904 11.0321 1.01384C11.5236 1.1548 12.5552 1.49486 13.3782 2.06268C16.2761 4.2356 16.0059 9.10495 15.9839 10.1334C15.9826 10.1961 15.9666 10.258 15.9356 10.3126C14.4483 12.9377 11.8683 12.9377 11.8683 12.9377L10.9936 11.118M9.25 2.43768H7.23395C7.09177 2.43768 6.96182 2.35727 6.89837 2.23004L6.38595 1.20258C6.30849 1.04726 6.13541 0.965813 5.96857 1.01365C5.47734 1.15449 4.44519 1.49461 3.62182 2.06268C0.723852 4.2356 0.994133 9.10495 1.01605 10.1334C1.01739 10.1961 1.03342 10.258 1.06437 10.3126C2.5517 12.9377 5.13173 12.9377 5.13173 12.9377L6.0092 11.1177M4.75096 10.6877C5.20071 10.8563 5.61675 10.9996 6.0092 11.1177M12.2529 10.6877C11.8027 10.8564 11.3863 10.9999 10.9936 11.118M6.0092 11.1177C7.84238 11.6692 9.1606 11.6693 10.9936 11.118M7.00154 6.93768C7.00154 7.35189 6.66567 7.68768 6.25135 7.68768C5.83703 7.68768 5.50115 7.35189 5.50115 6.93768C5.50115 6.52346 5.83703 6.18768 6.25135 6.18768C6.66567 6.18768 7.00154 6.52346 7.00154 6.93768ZM11.5027 6.93768C11.5027 7.35189 11.1668 7.68768 10.7525 7.68768C10.3382 7.68768 10.0023 7.35189 10.0023 6.93768C10.0023 6.52346 10.3382 6.18768 10.7525 6.18768C11.1668 6.18768 11.5027 6.52346 11.5027 6.93768Z" stroke="var(--colors-icons-iconLow)" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <a href="https://ar.io" target="_blank" title="AR.IO Network" class="footer-link">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <circle cx="9" cy="9" r="7.5" stroke="var(--colors-icons-iconLow)" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9 1.5C7.07418 3.52212 6 6.20756 6 9C6 11.7924 7.07418 14.4779 9 16.5C10.9258 14.4779 12 11.7924 12 9C12 6.20756 10.9258 3.52212 9 1.5Z" stroke="var(--colors-icons-iconLow)" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M1.5 9H16.5" stroke="var(--colors-icons-iconLow)" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
+          <div class="version-info" id="extensionVersion">v0.1.0</div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

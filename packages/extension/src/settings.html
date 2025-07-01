@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wayfinder Settings</title>
+    <!-- AR.IO Brand Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Albert+Sans:wght@400;600&family=DM+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&family=Rubik:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/variables.css" />
+    <link rel="stylesheet" href="assets/css/settings.css" />
+    <script type="module" src="settings.js"></script>
+  </head>
+  <body>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <div class="settings-container">
+      <!-- Header -->
+      <header class="settings-header">
+        <div class="header-content">
+          <div class="header-left">
+            <button class="back-button" id="backToMain">
+              <svg width="32" height="32" viewBox="0 0 36 36" fill="none">
+                <path d="M21.75 27L13.5 18.75L21.75 10.5" stroke="var(--colors-icons-iconHigh)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="header-title">
+              <h1>Settings</h1>
+              <p>Configure preferences</p>
+            </div>
+          </div>
+          
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="settings-content">
+
+
+        <!-- Routing Configuration -->
+        <section class="settings-section routing-config" id="routing">
+          <div class="section-header">
+            <h2>Routing Strategy</h2>
+            <p>Gateway selection method</p>
+          </div>
+          
+          <div class="routing-strategy-selector">
+            <div class="strategy-option" data-strategy="fastestPing">
+              <div class="strategy-header">
+                <input type="radio" name="routingStrategy" value="fastestPing" id="fastestPing">
+                <label for="fastestPing">
+                  <div class="strategy-icon">
+                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+                      <path d="M19.5 3L4.5 21h13.5l-1.5 12L31.5 15h-13.5L19.5 3z" stroke="var(--colors-icons-iconHigh)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="strategy-info">
+                    <h3>Fastest Ping</h3>
+                    <p>Select gateway based on lowest latency response</p>
+                  </div>
+                  <div class="strategy-badge recommended">Recommended</div>
+                </label>
+              </div>
+              <div class="strategy-details">
+                <div class="feature-list">
+                  <div class="feature">Parallel ping testing</div>
+                  <div class="feature">Sub-second gateway selection</div>
+                  <div class="feature">Optimal for performance</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="strategy-option" data-strategy="random">
+              <div class="strategy-header">
+                <input type="radio" name="routingStrategy" value="random" id="random">
+                <label for="random">
+                  <div class="strategy-icon">
+                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+                      <rect x="4.5" y="4.5" width="27" height="27" rx="3" ry="3" stroke="var(--colors-icons-iconHigh)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M24 12h.015M18 18h.015M12 24h.015" stroke="var(--colors-icons-iconHigh)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="strategy-info">
+                    <h3>Random Selection</h3>
+                    <p>Randomly select from available gateways</p>
+                  </div>
+                </label>
+              </div>
+              <div class="strategy-details">
+                <div class="feature-list">
+                  <div class="feature">Good for load balancing</div>
+                  <div class="feature">Simple and reliable</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="strategy-option" data-strategy="roundRobin">
+              <div class="strategy-header">
+                <input type="radio" name="routingStrategy" value="roundRobin" id="roundRobin">
+                <label for="roundRobin">
+                  <div class="strategy-icon">
+                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+                      <path d="M34.5 6v9h-9M1.5 30v-9h9M5.265 13.5a13.5 13.5 0 0 1 22.275-5.04L34.5 15M1.5 21l6.96 6.54A13.5 13.5 0 0 0 30.735 22.5" stroke="var(--colors-icons-iconHigh)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="strategy-info">
+                    <h3>Round Robin</h3>
+                    <p>Cycle through gateways in sequence</p>
+                  </div>
+                </label>
+              </div>
+              <div class="strategy-details">
+                <div class="feature-list">
+                  <div class="feature">Even load distribution</div>
+                  <div class="feature">Predictable routing</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="strategy-option" data-strategy="static">
+              <div class="strategy-header">
+                <input type="radio" name="routingStrategy" value="static" id="static">
+                <label for="static">
+                  <div class="strategy-icon">
+                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+                      <path d="M18 25.5v9M7.5 25.5h21v-2.64a3 3 0 0 0-1.665-2.685l-2.67-1.35A3 3 0 0 1 22.5 16.14V9h1.5a3 3 0 0 0 0-6H12a3 3 0 0 0 0 6h1.5v7.14a3 3 0 0 1-1.665 2.685l-2.67 1.35A3 3 0 0 0 7.5 22.86Z" stroke="var(--colors-icons-iconHigh)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="strategy-info">
+                    <h3>Static Gateway</h3>
+                    <p>Always use a specific gateway</p>
+                  </div>
+                </label>
+              </div>
+              <div class="strategy-details">
+                <div class="static-gateway-config">
+                  <div class="gateway-selector-container">
+                    <div class="gateway-quick-select">
+                      <label for="gatewayDropdown" class="select-label">Quick Select</label>
+                      <div class="select-wrapper">
+                        <select id="gatewayDropdown" class="gateway-dropdown">
+                          <option value="">Loading available gateways...</option>
+                        </select>
+                        <svg class="select-arrow" width="18" height="18" viewBox="0 0 36 36" fill="none">
+                          <path d="M9 13.5L18 22.5L27 13.5" stroke="var(--colors-icons-iconMid)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </div>
+                    
+                    <div class="gateway-divider">
+                      <span>or</span>
+                    </div>
+                    
+                    <div class="gateway-custom-input">
+                      <label for="staticGatewayUrl" class="input-label">Custom Gateway URL</label>
+                      <div class="input-with-button">
+                        <input type="url" id="staticGatewayUrl" placeholder="Enter custom gateway URL..." />
+                        <button class="test-button" id="testStaticGateway" disabled>Test</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Verified Browsing Settings -->
+        <section class="settings-section verified-browsing-config" id="verifiedBrowsing">
+          <div class="section-header">
+            <h2>Verified Browsing</h2>
+            <p>Enhanced security mode with comprehensive verification</p>
+          </div>
+          
+          <div class="verified-browsing-options">
+            <div class="option-card">
+              <div class="option-header">
+                <div class="feature-content">
+                  <svg class="feature-icon" width="32" height="32" viewBox="0 0 36 36" fill="none">
+                    <path d="M30 19.5C30 27 24.75 30.75 18.51 32.925C18.1832 33.0357 17.8283 33.0304 17.505 32.91C11.25 30.75 6 27 6 19.5V9C6 8.60218 6.15804 8.22064 6.43934 7.93934C6.72064 7.65804 7.10218 7.5 7.5 7.5C10.5 7.5 14.25 5.7 16.86 3.42C17.1778 3.1485 17.582 2.99933 18 2.99933C18.418 2.99933 18.8222 3.1485 19.14 3.42C21.765 5.715 25.5 7.5 28.5 7.5C28.8978 7.5 29.2794 7.65804 29.5607 7.93934C29.842 8.22064 30 8.60218 30 9V19.5Z" stroke="var(--colors-icons-iconHigh)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M13.5 18L16.5 21L22.5 15" stroke="var(--colors-icons-iconHigh)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <div class="feature-info">
+                    <div class="feature-label">Verified Browsing</div>
+                    <div class="feature-description">Enable cryptographic verification.</div>
+                  </div>
+                </div>
+                <div class="toggle-switch">
+                  <input type="checkbox" id="verifiedBrowsingToggle">
+                  <span class="toggle-slider"></span>
+                </div>
+              </div>
+              <div class="option-details" id="verifiedBrowsingDetails" style="display: none;">
+                <div class="feature-list">
+                  <div class="feature">Cryptographic verification of all content</div>
+                  <div class="feature">Service worker verifies JS, CSS, and media</div>
+                  <div class="feature">Intercepts direct gateway navigation</div>
+                  <div class="feature">Clean, minimizable interface</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Verification Strategy Selection -->
+            <div id="verificationStrategyWrapper" class="verification-strategy-section" style="display: none;">
+              <div class="verification-strategy-selector">
+                <div class="strategy-option" data-strategy="hash">
+                  <div class="strategy-header">
+                    <input type="radio" name="verificationStrategy" value="hash" id="hashStrategy" checked>
+                    <label for="hashStrategy">
+                      <div class="strategy-icon">
+                        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+                          <path d="M15 6v24M21 6v24M6 15h24M6 21h24" stroke="var(--colors-icons-iconHigh)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                                            <div class="strategy-info">
+                        <h3>Hash Verification</h3>
+                        <p>Fast SHA-256 hash-based verification</p>
+                      </div>
+                    </label>
+                    <div class="strategy-badge recommended">Recommended</div>
+                  </div>
+                  <div class="strategy-details">
+                    <div class="feature-list">
+                      <div class="feature">Fast verification using SHA-256 hashes</div>
+                      <div class="feature">Works with all content types</div>
+                      <div class="feature">Minimal network overhead</div>
+                      <div class="feature">Industry standard cryptographic verification</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="strategy-option" data-strategy="dataRoot">
+                  <div class="strategy-header">
+                    <input type="radio" name="verificationStrategy" value="dataRoot" id="dataRootStrategy">
+                    <label for="dataRootStrategy">
+                      <div class="strategy-icon">
+                        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+                          <path d="M18 3L30 9v18l-12 6L6 27V9l12-6z" stroke="var(--colors-icons-iconHigh)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M6 9l12 6 12-6M18 15v18" stroke="var(--colors-icons-iconHigh)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                      <div class="strategy-info">
+                        <h3>Data Root</h3>
+                        <p>Verify content using Arweave data roots</p>
+                      </div>
+                    </label>
+                  </div>
+                  <div class="strategy-details">
+                    <div class="feature-list">
+                      <div class="feature">Uses Arweave's native verification</div>
+                      <div class="feature">Merkle tree-based verification</div>
+                      <div class="feature">Requires additional network requests</div>
+                      <div class="feature">More comprehensive but slower</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Verification Strategy -->
+        <section class="settings-section verification-strategy-config" id="verificationStrategy">
+          <div class="section-header">
+            <h2>Verification Strategy</h2>
+            <p>Choose your cryptographic verification method</p>
+          </div>
+          
+          <div class="verification-strategy-selector">
+            <div class="strategy-option" data-strategy="hash">
+              <div class="strategy-header">
+                <input type="radio" name="verificationStrategy" value="hash" id="hashVerificationStrategy" checked>
+                <label for="hashVerificationStrategy">
+                  <div class="strategy-icon">
+                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+                      <path d="M15 6v24M21 6v24M6 15h24M6 21h24" stroke="var(--colors-icons-iconHigh)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="strategy-info">
+                    <h3>Hash Verification</h3>
+                    <p>Fast SHA-256 hash-based verification</p>
+                  </div>
+                </label>
+                <div class="strategy-badge recommended">Recommended</div>
+              </div>
+              <div class="strategy-details">
+                <div class="feature-list">
+                  <div class="feature">Fast verification using SHA-256 hashes</div>
+                  <div class="feature">Works with all content types</div>
+                  <div class="feature">Minimal network overhead</div>
+                  <div class="feature">Industry standard cryptographic verification</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="strategy-option" data-strategy="dataRoot">
+              <div class="strategy-header">
+                <input type="radio" name="verificationStrategy" value="dataRoot" id="dataRootVerificationStrategy">
+                <label for="dataRootVerificationStrategy">
+                  <div class="strategy-icon">
+                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+                      <path d="M18 3L30 9v18l-12 6L6 27V9l12-6z" stroke="var(--colors-icons-iconHigh)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M6 9l12 6 12-6M18 15v18" stroke="var(--colors-icons-iconHigh)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="strategy-info">
+                    <h3>Data Root Verification</h3>
+                    <p>Verify content using Arweave data roots</p>
+                  </div>
+                </label>
+              </div>
+              <div class="strategy-details">
+                <div class="feature-list">
+                  <div class="feature">Uses Arweave's native verification</div>
+                  <div class="feature">Merkle tree-based verification</div>
+                  <div class="feature">Requires additional network requests</div>
+                  <div class="feature">More comprehensive but slower</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Theme Settings -->
+        <section class="settings-section theme-config" id="theme">
+          <div class="section-header">
+            <h2>Theme</h2>
+            <p>Choose your preferred appearance</p>
+          </div>
+          
+          <div class="theme-selector">
+            <div class="theme-option" data-theme="light">
+              <div class="theme-header">
+                <input type="radio" name="theme" value="light" id="lightTheme">
+                <label for="lightTheme">
+                  <div class="theme-icon">
+                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+                      <circle cx="18" cy="18" r="7.5" stroke="var(--colors-icons-iconHigh)" stroke-width="2"/>
+                      <path d="M18 1.5v3M18 31.5v3M6.705 6.705l2.12 2.12M27.175 27.175l2.12 2.12M1.5 18h3M31.5 18h3M6.705 29.295l2.12-2.12M27.175 8.825l2.12-2.12" stroke="var(--colors-icons-iconHigh)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="theme-info">
+                    <h3>Light</h3>
+                    <p>Bright and clean interface</p>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <div class="theme-option" data-theme="dark">
+              <div class="theme-header">
+                <input type="radio" name="theme" value="dark" id="darkTheme" checked>
+                <label for="darkTheme">
+                  <div class="theme-icon">
+                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+                      <path d="M31.5 18.795A13.5 13.5 0 1 1 16.815 4.5 10.5 10.5 0 0 0 31.5 18.795z" stroke="var(--colors-icons-iconHigh)" stroke-width="2"/>
+                    </svg>
+                  </div>
+                  <div class="theme-info">
+                    <h3>Dark</h3>
+                    <p>Reduced eye strain for low-light</p>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <div class="theme-option" data-theme="system">
+              <div class="theme-header">
+                <input type="radio" name="theme" value="system" id="systemTheme">
+                <label for="systemTheme">
+                  <div class="theme-icon">
+                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+                      <rect x="4.5" y="7.5" width="27" height="18" rx="3" ry="3" stroke="var(--colors-icons-iconHigh)" stroke-width="2"/>
+                      <path d="M13.5 31.5h9" stroke="var(--colors-icons-iconHigh)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M16.5 25.5v6M19.5 25.5v6" stroke="var(--colors-icons-iconHigh)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="theme-info">
+                    <h3>System</h3>
+                    <p>Match your device settings</p>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Gateway Provider Settings -->
+        <section class="settings-section gateway-provider-config" id="gatewayProvider">
+          <div class="section-header">
+            <h2>Gateway Provider Settings</h2>
+            <p>Configure gateway discovery and management</p>
+          </div>
+          
+          <div class="gateway-provider-options">
+            <!-- Gateway Sorting -->
+            <div class="provider-option">
+              <div class="option-header">
+                <div class="option-info">
+                  <h3>Gateway Sorting</h3>
+                  <p>Method for ordering available gateways</p>
+                </div>
+                <div class="select-wrapper">
+                  <select id="gatewaySortBy" class="provider-dropdown">
+                    <option value="operatorStake">Operator Stake</option>
+                    <option value="totalStake">Total Stake</option>
+                    <option value="random">Random</option>
+                  </select>
+                  <svg class="select-arrow" width="18" height="18" viewBox="0 0 36 36" fill="none">
+                    <path d="M9 13.5L18 22.5L27 13.5" stroke="var(--colors-icons-iconMid)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sort Order -->
+            <div class="provider-option">
+              <div class="option-header">
+                <div class="option-info">
+                  <h3>Sort Order</h3>
+                  <p>Direction for gateway ordering</p>
+                </div>
+                <div class="select-wrapper">
+                  <select id="gatewaySortOrder" class="provider-dropdown">
+                    <option value="desc">Descending (High to Low)</option>
+                    <option value="asc">Ascending (Low to High)</option>
+                  </select>
+                  <svg class="select-arrow" width="18" height="18" viewBox="0 0 36 36" fill="none">
+                    <path d="M9 13.5L18 22.5L27 13.5" stroke="var(--colors-icons-iconMid)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Gateway Cache TTL -->
+            <div class="provider-option">
+              <div class="option-header">
+                <div class="option-info">
+                  <h3>Gateway Cache TTL</h3>
+                  <p>How long to cache gateway information</p>
+                </div>
+                <div class="ttl-config">
+                  <div class="slider-container">
+                    <input type="range" id="gatewayCacheTTL" min="300" max="7200" value="3600" step="300">
+                    <span class="slider-value" id="ttlValue">1 hour</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Trusted Gateways for Verification -->
+        <section class="settings-section trusted-gateways-config" id="trustedGateways">
+          <div class="section-header">
+            <h2>Trusted Gateways for Verification</h2>
+            <p>Configure which gateways to use for content verification</p>
+          </div>
+          
+          <div class="trusted-gateways-options">
+            <!-- Gateway Mode Selection -->
+            <div class="gateway-mode-selector">
+              <div class="mode-option">
+                <input type="radio" name="verificationGatewayMode" value="automatic" id="automaticMode" checked>
+                <label for="automaticMode">
+                  <div class="mode-icon">
+                    <svg width="24" height="24" viewBox="0 0 36 36" fill="none">
+                      <circle cx="18" cy="18" r="3" stroke="var(--colors-icons-iconHigh)" stroke-width="2"/>
+                      <circle cx="9" cy="9" r="3" stroke="var(--colors-icons-iconHigh)" stroke-width="2"/>
+                      <circle cx="27" cy="9" r="3" stroke="var(--colors-icons-iconHigh)" stroke-width="2"/>
+                      <circle cx="9" cy="27" r="3" stroke="var(--colors-icons-iconHigh)" stroke-width="2"/>
+                      <circle cx="27" cy="27" r="3" stroke="var(--colors-icons-iconHigh)" stroke-width="2"/>
+                      <path d="M12 9h12M12 27h12M9 12v12M27 12v12" stroke="var(--colors-icons-iconHigh)" stroke-width="2"/>
+                    </svg>
+                  </div>
+                  <div class="mode-info">
+                    <h3>Automatic Selection</h3>
+                    <p>Use top gateways by stake automatically</p>
+                  </div>
+                </label>
+              </div>
+              <div class="mode-option">
+                <input type="radio" name="verificationGatewayMode" value="manual" id="manualMode">
+                <label for="manualMode">
+                  <div class="mode-icon">
+                    <svg width="24" height="24" viewBox="0 0 36 36" fill="none">
+                      <path d="M13.5 18L16.5 21L22.5 15" stroke="var(--colors-icons-iconHigh)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <circle cx="18" cy="18" r="13.5" stroke="var(--colors-icons-iconHigh)" stroke-width="2"/>
+                    </svg>
+                  </div>
+                  <div class="mode-info">
+                    <h3>Manual Selection</h3>
+                    <p>Choose specific trusted gateways</p>
+                  </div>
+                </label>
+              </div>
+            </div>
+            
+            <!-- Gateway Count Configuration -->
+            <div class="gateway-count-config">
+              <label for="verificationGatewayCount">Number of verification gateways:</label>
+              <div class="slider-container">
+                <input type="range" id="verificationGatewayCount" min="1" max="10" value="3" step="1">
+                <span class="slider-value" id="gatewayCountValue">3</span>
+              </div>
+            </div>
+
+            <!-- Gateway Selection List (for manual mode) -->
+            <div id="gatewaySelectionSection" class="gateway-selection-section" style="display: none;">
+              <h4>Select Trusted Gateways:</h4>
+              <div id="gatewaySelectionList" class="gateway-selection-list">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+
+            <!-- Current Trusted Gateways Preview -->
+            <div class="trusted-gateways-preview">
+              <h4>Current Trusted Gateways:</h4>
+              <div id="trustedGatewaysList" class="trusted-gateways-list">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Network Configuration -->
+        <section class="settings-section network-config" id="networkConfig">
+          <div class="section-header">
+            <h2>Network Configuration</h2>
+            <p>Configure network endpoints and identifiers</p>
+          </div>
+          
+          <div class="network-options">
+            <!-- AR.IO Process ID -->
+            <div class="network-option">
+              <div class="option-header">
+                <div class="option-info">
+                  <h3>AR.IO Process ID</h3>
+                  <p>Process identifier for AR.IO network interactions</p>
+                </div>
+              </div>
+              <div class="option-input">
+                <input type="text" id="processId" placeholder="Enter AR.IO Process ID..." />
+                <button class="test-button" id="testProcessId" disabled>Test</button>
+              </div>
+            </div>
+
+            <!-- AO Compute Unit URL -->
+            <div class="network-option">
+              <div class="option-header">
+                <div class="option-info">
+                  <h3>AO Compute Unit URL</h3>
+                  <p>URL for AO compute unit interactions</p>
+                </div>
+              </div>
+              <div class="option-input">
+                <input type="url" id="aoCuUrl" placeholder="Enter AO Compute Unit URL..." />
+                <button class="test-button" id="testAoCuUrl" disabled>Test</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Data Management -->
+        <section class="settings-section data-management danger-section" id="dataManagement">
+          <div class="section-header">
+            <h2>Data Management</h2>
+            <p>Manage extension data and cache</p>
+          </div>
+          
+          <div class="data-actions">
+            <div class="action-info">
+              <h3>Clear Extension Data</h3>
+              <p>Clear all cached data, settings, and performance metrics</p>
+            </div>
+            <div class="button-group">
+              <button class="secondary-button" id="clearCache">Clear Cache</button>
+              <button class="danger-button" id="resetExtension">Reset All</button>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Footer -->
+      <footer class="settings-footer">
+        <div class="footer-content">
+          <div class="footer-links">
+            <a href="https://github.com/ar-io/wayfinder" target="_blank" title="View source code" class="footer-link">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <path d="M11.25 16.5V13.5C11.3543 12.5605 11.0849 11.6176 10.5 10.875C12.75 10.875 15 9.375 15 6.75C15.06 5.8125 14.7975 4.89 14.25 4.125C14.46 3.2625 14.46 2.3625 14.25 1.5C14.25 1.5 13.5 1.5 12 2.625C10.02 2.25 7.98 2.25 6 2.625C4.5 1.5 3.75 1.5 3.75 1.5C3.525 2.3625 3.525 3.2625 3.75 4.125C3.20391 4.88691 2.93885 5.81459 3 6.75C3 9.375 5.25 10.875 7.5 10.875C7.2075 11.2425 6.99 11.6625 6.8625 12.1125C6.735 12.5625 6.6975 13.035 6.75 13.5V16.5" stroke="var(--colors-icons-iconLow)" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M6.75 13.5C3.3675 15 3 12 1.5 12" stroke="var(--colors-icons-iconLow)" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <a href="https://discord.gg/zAZ8p9ARqC" target="_blank" title="Join our Discord" class="footer-link">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <path d="M7.75 2.43768H9.76971C9.91219 2.43768 10.0424 2.35693 10.1057 2.22928L10.6143 1.2035C10.6916 1.04772 10.8649 0.965904 11.0321 1.01384C11.5236 1.1548 12.5552 1.49486 13.3782 2.06268C16.2761 4.2356 16.0059 9.10495 15.9839 10.1334C15.9826 10.1961 15.9666 10.258 15.9356 10.3126C14.4483 12.9377 11.8683 12.9377 11.8683 12.9377L10.9936 11.118M9.25 2.43768H7.23395C7.09177 2.43768 6.96182 2.35727 6.89837 2.23004L6.38595 1.20258C6.30849 1.04726 6.13541 0.965813 5.96857 1.01365C5.47734 1.15449 4.44519 1.49461 3.62182 2.06268C0.723852 4.2356 0.994133 9.10495 1.01605 10.1334C1.01739 10.1961 1.03342 10.258 1.06437 10.3126C2.5517 12.9377 5.13173 12.9377 5.13173 12.9377L6.0092 11.1177M4.75096 10.6877C5.20071 10.8563 5.61675 10.9996 6.0092 11.1177M12.2529 10.6877C11.8027 10.8564 11.3863 10.9999 10.9936 11.118M6.0092 11.1177C7.84238 11.6692 9.1606 11.6693 10.9936 11.118M7.00154 6.93768C7.00154 7.35189 6.66567 7.68768 6.25135 7.68768C5.83703 7.68768 5.50115 7.35189 5.50115 6.93768C5.50115 6.52346 5.83703 6.18768 6.25135 6.18768C6.66567 6.18768 7.00154 6.52346 7.00154 6.93768ZM11.5027 6.93768C11.5027 7.35189 11.1668 7.68768 10.7525 7.68768C10.3382 7.68768 10.0023 7.35189 10.0023 6.93768C10.0023 6.52346 10.3382 6.18768 10.7525 6.18768C11.1668 6.18768 11.5027 6.52346 11.5027 6.93768Z" stroke="var(--colors-icons-iconLow)" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <a href="https://ar.io" target="_blank" title="AR.IO Network" class="footer-link">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <circle cx="9" cy="9" r="7.5" stroke="var(--colors-icons-iconLow)" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9 1.5C7.07418 3.52212 6 6.20756 6 9C6 11.7924 7.07418 14.4779 9 16.5C10.9258 14.4779 12 11.7924 12 9C12 6.20756 10.9258 3.52212 9 1.5Z" stroke="var(--colors-icons-iconLow)" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M1.5 9H16.5" stroke="var(--colors-icons-iconLow)" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
+          <div class="version-info" id="extensionVersion">v0.1.0</div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

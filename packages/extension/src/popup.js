@@ -1,0 +1,402 @@
+/**
+ * WayFinder Popup
+ * Modern homepage interface
+ */
+
+// Toast notification system - Figma design
+// Exported for potential future use
+export function showToast(message, type = 'success') {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  
+  // Create appropriate icon based on type
+  let icon;
+  if (type === 'error') {
+    icon = `
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M8 1.33334C4.31801 1.33334 1.33334 4.31801 1.33334 8C1.33334 11.682 4.31801 14.6667 8 14.6667C11.682 14.6667 14.6667 11.682 14.6667 8C14.6667 4.31801 11.682 1.33334 8 1.33334ZM10.6667 9.78668L9.78668 10.6667L8 8.88001L6.21334 10.6667L5.33334 9.78668L7.12001 8L5.33334 6.21334L6.21334 5.33334L8 7.12001L9.78668 5.33334L10.6667 6.21334L8.88001 8L10.6667 9.78668Z" fill="#0E0E0F"/>
+      </svg>
+    `;
+  } else {
+    // Default to check icon for success
+    icon = `
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M13.3333 4L6 11.3333L2.66667 8" stroke="#0E0E0F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    `;
+  }
+  
+  // Create close icon (from Figma)
+  const closeIcon = `
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <path d="M10 2C14.4183 2 18 5.58172 18 10C18 14.4183 14.4183 18 10 18C5.58172 18 2 14.4183 2 10C2 5.58172 5.58172 2 10 2ZM13.0303 6.96973C12.7374 6.67683 12.2626 6.67683 11.9697 6.96973L10 8.93945L8.03027 6.96973C7.73738 6.67683 7.26262 6.67683 6.96973 6.96973C6.67683 7.26262 6.67683 7.73738 6.96973 8.03027L8.93945 10L6.96973 11.9697C6.67683 12.2626 6.67683 12.7374 6.96973 13.0303C7.26262 13.3232 7.73738 13.3232 8.03027 13.0303L10 11.0605L11.9697 13.0303L12.0264 13.082C12.3209 13.3223 12.7557 13.3049 13.0303 13.0303C13.3049 12.7557 13.3223 12.3209 13.082 12.0264L13.0303 11.9697L11.0605 10L13.0303 8.03027C13.3232 7.73738 13.3232 7.26262 13.0303 6.96973Z" fill="#0E0E0F"/>
+    </svg>
+  `;
+  
+  toast.innerHTML = `
+    <div class="toast-content">
+      <div class="toast-icon">${icon}</div>
+      <div class="toast-text">${message}</div>
+    </div>
+    <div class="toast-close">${closeIcon}</div>
+  `;
+
+  container.appendChild(toast);
+
+  // Add click handler to close button
+  const closeButton = toast.querySelector('.toast-close');
+  closeButton?.addEventListener('click', () => {
+    if (toast.parentNode) {
+      toast.parentNode.removeChild(toast);
+    }
+  });
+
+  // Auto-remove after 3 seconds
+  setTimeout(() => {
+    if (toast.parentNode) {
+      toast.parentNode.removeChild(toast);
+    }
+  }, 3000);
+}
+
+// Initialize popup
+document.addEventListener('DOMContentLoaded', async () => {
+  await initializePopup();
+  setupEventHandlers();
+  setupStorageListener();
+  await loadStats();
+  await loadCurrentStrategy();
+  await loadVerifiedBrowsingState();
+  updateConnectionStatus();
+});
+
+// Listen for storage changes to update UI in real-time
+function setupStorageListener() {
+  chrome.storage.onChanged.addListener((changes, areaName) => {
+    if (areaName === 'local') {
+      // Update gateway count if sync status or registry changes
+      if (
+        changes.syncStatus ||
+        changes.localGatewayAddressRegistry ||
+        changes.lastKnownGatewayCount
+      ) {
+        loadStats();
+      }
+
+      // Update routing strategy if changed
+      if (changes.routingMethod) {
+        loadCurrentStrategy();
+      }
+
+      // Verification section removed from popup
+
+      // Update Verified Browsing if changed
+      if (changes.verifiedBrowsing !== undefined) {
+        updateVerifiedBrowsingUI(changes.verifiedBrowsing.newValue);
+      }
+    }
+  });
+}
+
+async function initializePopup() {
+  // Apply saved theme
+  await applyTheme();
+
+  // Set dynamic version
+  await setExtensionVersion();
+}
+
+async function setExtensionVersion() {
+  try {
+    const manifest = chrome.runtime.getManifest();
+    const versionElement = document.getElementById('extensionVersion');
+    if (versionElement) {
+      versionElement.textContent = `v${manifest.version}`;
+    }
+  } catch (error) {
+    console.error('Failed to set extension version:', error);
+  }
+}
+
+function setupEventHandlers() {
+  // Navigation cards
+  document.getElementById('showGateways')?.addEventListener('click', () => {
+    window.location.href = 'gateways.html';
+  });
+
+  document.getElementById('showHistory')?.addEventListener('click', () => {
+    window.location.href = 'performance.html';
+  });
+
+  document.getElementById('showSettings')?.addEventListener('click', () => {
+    window.location.href = 'settings.html';
+  });
+
+  // Current strategy change
+  document.getElementById('changeStrategy')?.addEventListener('click', () => {
+    window.location.href = 'settings.html#routing';
+  });
+
+  // Verification change button removed
+
+  // Verified Browsing toggle
+  const verifiedBrowsingToggle = document.getElementById(
+    'verifiedBrowsingToggle',
+  );
+  verifiedBrowsingToggle?.addEventListener('change', async (e) => {
+    const enabled = e.target.checked;
+
+    // Save both settings to keep them in sync
+    await chrome.storage.local.set({ 
+      verifiedBrowsing: enabled,
+      verificationEnabled: enabled  // Sync with the internal verification setting
+    });
+
+    // Reset wayfinder to apply new verification setting
+    try {
+      await chrome.runtime.sendMessage({ message: 'resetWayfinder' });
+    } catch (error) {
+      console.error('Error resetting wayfinder:', error);
+    }
+
+    // Update UI
+    updateVerifiedBrowsingUI(enabled);
+
+    // Show toast
+    if (enabled) {
+      showToast('Verified Browsing enabled - all content will be cryptographically verified', 'success');
+    } else {
+      showToast('Verified Browsing disabled', 'info');
+    }
+  });
+}
+
+async function loadStats() {
+  try {
+    // Load gateway stats, daily stats, and sync status
+    const {
+      localGatewayAddressRegistry = {},
+      gatewayPerformance = {},
+      dailyStats,
+      syncStatus = 'idle',
+      lastKnownGatewayCount = 0,
+    } = await chrome.storage.local.get([
+      'localGatewayAddressRegistry',
+      'gatewayPerformance',
+      'dailyStats',
+      'syncStatus',
+      'lastKnownGatewayCount',
+    ]);
+
+    const activeCount = Object.values(localGatewayAddressRegistry).filter(
+      (gateway) => gateway.status === 'joined',
+    ).length;
+
+    // Update gateway count with loading state
+    const countElement = document.getElementById('activeGatewayCount');
+    const gatewayCard = document.getElementById('showGateways');
+
+    if (syncStatus === 'syncing') {
+      // Show loading state
+      if (lastKnownGatewayCount > 0) {
+        countElement.innerHTML = `<svg class="loading-indicator" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg> ${lastKnownGatewayCount}`;
+        // Add subtle loading animation to the card
+        gatewayCard?.classList.add('syncing');
+      } else {
+        countElement.innerHTML =
+          '<svg class="loading-indicator spinning" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg> Syncing...';
+        gatewayCard?.classList.add('syncing');
+      }
+    } else if (syncStatus === 'error') {
+      // Show error state with helpful message
+      if (lastKnownGatewayCount > 0) {
+        countElement.innerHTML = `<svg class="error-indicator" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> ${lastKnownGatewayCount}`;
+      } else {
+        countElement.innerHTML = `<svg class="error-indicator" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Sync Failed`;
+      }
+      gatewayCard?.classList.add('sync-error');
+      gatewayCard?.classList.remove('syncing');
+      
+      // Show error toast with helpful information
+      showToast('Gateway sync failed. Using cached data. Check your internet connection and try again later.', 'error');
+    } else if (activeCount === 0 && syncStatus === 'idle') {
+      // Initial state - trigger sync
+      countElement.innerHTML =
+        '<svg class="loading-indicator spinning" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg> Loading...';
+      gatewayCard?.classList.add('syncing');
+      // Trigger initial sync
+      chrome.runtime.sendMessage({ message: 'syncGatewayAddressRegistry' });
+    } else {
+      // Normal display
+      countElement.textContent = activeCount;
+      gatewayCard?.classList.remove('syncing', 'sync-error');
+    }
+
+    // Calculate average response time
+    const performances = Object.values(gatewayPerformance);
+    if (performances.length > 0) {
+      const avgResponseTimes = performances
+        .map((p) => p.avgResponseTime)
+        .filter((time) => time !== undefined);
+
+      const overallAvg =
+        avgResponseTimes.length > 0
+          ? avgResponseTimes.reduce((a, b) => a + b, 0) /
+            avgResponseTimes.length
+          : 0;
+
+      document.getElementById('avgResponseTime').textContent =
+        overallAvg > 0 ? `${Math.round(overallAvg)}ms` : '--';
+    } else {
+      document.getElementById('avgResponseTime').textContent = '--';
+    }
+
+    // Display actual requests today
+    const today = new Date().toDateString();
+    const requestsToday =
+      dailyStats && dailyStats.date === today ? dailyStats.requestCount : 0;
+    document.getElementById('requestsToday').textContent = requestsToday;
+  } catch (error) {
+    console.error('Error loading stats:', error);
+  }
+}
+
+async function loadCurrentStrategy() {
+  try {
+    const { routingMethod = 'fastestPing' } = await chrome.storage.local.get([
+      'routingMethod',
+    ]);
+
+    const strategyNames = {
+      fastestPing: 'Fastest Ping',
+      random: 'Random Selection',
+      roundRobin: 'Round Robin',
+      static: 'Static Gateway',
+      // Legacy method fallbacks
+      optimalGateway: 'Fastest Ping',
+      weightedStake: 'Random Selection',
+      topFiveStake: 'Random Selection',
+      weightedOnchainPerformance: 'Fastest Ping',
+      stakeRandom: 'Random Selection',
+      highestStake: 'Random Selection',
+    };
+
+    const strategyName = strategyNames[routingMethod] || 'Fastest Ping';
+    const currentStrategyElement = document.getElementById('currentStrategy');
+    if (currentStrategyElement) {
+      currentStrategyElement.textContent = strategyName;
+    } else {
+      console.warn('currentStrategy element not found in DOM');
+    }
+  } catch (error) {
+    console.error('Error loading current strategy:', error);
+  }
+}
+
+// Verification section removed from popup
+
+async function updateConnectionStatus() {
+  try {
+    // Test connection via background script (avoids CORS issues)
+    const response = await chrome.runtime.sendMessage({ message: 'testConnection' });
+    
+    const statusElement = document.getElementById('connectionStatus');
+    if (!statusElement) return;
+
+    const statusText = statusElement.querySelector('.status-text');
+    if (!statusText) return;
+
+    if (response && response.success && response.isConnected) {
+      statusText.textContent = 'Connected';
+      statusElement.classList.remove('limited', 'offline');
+      statusElement.classList.add('connected');
+    } else {
+      statusText.textContent = 'Limited';
+      statusElement.classList.remove('connected', 'offline');
+      statusElement.classList.add('limited');
+    }
+  } catch (error) {
+    console.error('Connection test error:', error);
+    const statusElement = document.getElementById('connectionStatus');
+    const statusText = statusElement?.querySelector('.status-text');
+
+    if (statusText) {
+      statusText.textContent = 'Offline';
+      statusElement.classList.remove('connected', 'limited');
+      statusElement.classList.add('offline');
+    }
+  }
+}
+
+async function applyTheme() {
+  try {
+    const { theme = 'dark' } = await chrome.storage.local.get(['theme']);
+    const body = document.body;
+
+    body.classList.remove('light-mode', 'dark-mode');
+
+    if (theme === 'light') {
+      body.setAttribute('data-theme', 'light');
+    } else if (theme === 'auto') {
+      // Detect system preference
+      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    } else {
+      body.setAttribute('data-theme', 'dark');
+    }
+  } catch (error) {
+    console.error('Error applying theme:', error);
+  }
+}
+
+// Listen for system theme changes when auto theme is selected
+window
+  .matchMedia('(prefers-color-scheme: dark)')
+  .addEventListener('change', async (_e) => {
+    const { theme } = await chrome.storage.local.get(['theme']);
+    if (theme === 'auto') {
+      applyTheme();
+    }
+  });
+
+// Load Verified Browsing state on startup
+async function loadVerifiedBrowsingState() {
+  try {
+    const { verifiedBrowsing = false } = await chrome.storage.local.get(['verifiedBrowsing']);
+    
+    // Update toggle state
+    const toggle = document.getElementById('verifiedBrowsingToggle');
+    if (toggle) {
+      toggle.checked = verifiedBrowsing;
+    }
+    
+    // Update UI
+    updateVerifiedBrowsingUI(verifiedBrowsing);
+  } catch (error) {
+    console.error('Error loading verified browsing state:', error);
+  }
+}
+
+function updateVerifiedBrowsingUI(enabled) {
+  const statusEl = document.getElementById('verifiedBrowsingStatus');
+  const descEl = document.getElementById('verifiedBrowsingDesc');
+  const featureCard = document.querySelector(
+    '.verified-browsing-section .feature-card',
+  );
+
+  if (statusEl) {
+    statusEl.textContent = enabled ? 'ON' : 'OFF';
+    statusEl.className = `feature-status ${enabled ? 'enabled' : 'disabled'}`;
+  }
+
+  if (descEl) {
+    descEl.textContent = enabled
+      ? 'All content is cryptographically verified'
+      : 'Enable cryptographic verification of all content';
+  }
+
+  if (featureCard) {
+    featureCard.classList.toggle('active', enabled);
+  }
+}
