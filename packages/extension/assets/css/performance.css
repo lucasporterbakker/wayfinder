@@ -626,7 +626,7 @@ html, body {
   padding: 0 18px 18px 18px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 32px;
   z-index: 1;
   position: relative;
 }
@@ -695,7 +695,7 @@ html, body {
   background: var(--colors-container-containerL1, #0e0e0f);
   border: 1px solid rgba(202, 202, 214, 0.08);
   border-radius: 12px;
-  padding: 18px;
+  padding: 20px;
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
